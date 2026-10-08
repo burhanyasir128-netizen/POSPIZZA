@@ -1,0 +1,8 @@
+{
+  "name": "Remix Crust \u0026 Co. Pizza POS \u0026 Management System",
+  "description": "Complete pizza shop management software with POS, KDS, inventory, recipe tracking, delivery, and accounting reports in PKR.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
