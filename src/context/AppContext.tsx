@@ -86,17 +86,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [categories] = useState<Category[]>(INITIAL_CATEGORIES);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [inventory, setInventory] = useState<InventoryItem[]>([]);
-  const [suppliers] = useState<Supplier[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [riders, setRiders] = useState<RiderRecord[]>([]);
-  const [deals] = useState<DealRecord[]>([]);
-  const [coupons] = useState<CouponRecord[]>([]);
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY);
+  const [suppliers] = useState<Supplier[]>(INITIAL_SUPPLIERS);
+  const [customers, setCustomers] = useState<Customer[]>(INITIAL_CUSTOMERS);
+  const [riders, setRiders] = useState<RiderRecord[]>(INITIAL_RIDERS);
+  const [deals] = useState<DealRecord[]>(INITIAL_DEALS);
+  const [coupons] = useState<CouponRecord[]>(INITIAL_COUPONS);
   const [zones] = useState<DeliveryZone[]>(INITIAL_ZONES);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [expenses, setExpenses] = useState<ExpenseRecord[]>([]);
-  const [shifts, setShifts] = useState<ShiftRecord[]>([INITIAL_SHIFTS[0]]);
+  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [expenses, setExpenses] = useState<ExpenseRecord[]>(INITIAL_EXPENSES);
+  const [shifts, setShifts] = useState<ShiftRecord[]>(INITIAL_SHIFTS);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
 
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'warning' } | null>(null);
