@@ -14,8 +14,36 @@ export const SettingsView: React.FC = () => {
   const [googleSheetWebAppUrl, setGoogleSheetWebAppUrl] = useState(settings.googleSheetWebAppUrl || '');
   const [restoreJsonInput, setRestoreJsonInput] = useState('');
   const [copiedScript, setCopiedScript] = useState(false);
+  const [isSavingUrl, setIsSavingUrl] = useState(false);
 
   const isSuperAdmin = currentUser?.role === 'Super Admin';
+
+  const handleSaveUrlToCode = async () => {
+    if (!googleSheetWebAppUrl) {
+      showToast('Please enter a valid URL first.', 'warning');
+      return;
+    }
+    
+    setIsSavingUrl(true);
+    try {
+      const response = await fetch('/api/save-google-sheet-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: googleSheetWebAppUrl })
+      });
+      const result = await response.json();
+      if (result.success) {
+        showToast('Google Sheet URL saved to source code successfully!');
+      } else {
+        showToast('Failed to save to code.', 'error');
+      }
+    } catch (err) {
+      console.error('Failed to save URL to server:', err);
+      showToast('Error connecting to backend.', 'error');
+    } finally {
+      setIsSavingUrl(false);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,26 +58,8 @@ export const SettingsView: React.FC = () => {
       logoUrl,
       ...(isSuperAdmin ? { developerName, googleSheetWebAppUrl } : {})
     });
-
-    // Save URL to server-side config file if modified by Super Admin
-    if (isSuperAdmin && googleSheetWebAppUrl) {
-      try {
-        const response = await fetch('/api/save-google-sheet-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: googleSheetWebAppUrl })
-        });
-        const result = await response.json();
-        if (result.success) {
-          showToast('Google Sheet URL saved to code successfully!');
-        }
-      } catch (err) {
-        console.error('Failed to save URL to server:', err);
-        showToast('Saved locally, but failed to write to code file.', 'warning');
-      }
-    } else {
-      showToast('Settings saved successfully!');
-    }
+    
+    showToast('Settings saved successfully!');
   };
 
   const handleExportBackup = () => {
@@ -185,13 +195,23 @@ export const SettingsView: React.FC = () => {
 
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Google Apps Script Web App URL</label>
-                  <input 
-                    type="text" 
-                    value={googleSheetWebAppUrl} 
-                    onChange={e => setGoogleSheetWebAppUrl(e.target.value)}
-                    placeholder="https://script.google.com/macros/s/.../exec"
-                    className="w-full bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-xs font-mono"
-                  />
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      value={googleSheetWebAppUrl} 
+                      onChange={e => setGoogleSheetWebAppUrl(e.target.value)}
+                      placeholder="https://script.google.com/macros/s/.../exec"
+                      className="flex-1 bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-xs font-mono"
+                    />
+                    <button 
+                      onClick={handleSaveUrlToCode}
+                      disabled={isSavingUrl}
+                      className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-xl text-xs font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isSavingUrl ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                      <span>Save to Code</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3">
