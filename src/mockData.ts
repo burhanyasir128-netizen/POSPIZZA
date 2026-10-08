@@ -13,7 +13,7 @@ export const INITIAL_SETTINGS: ShopSettings = {
   lowStockThreshold: 5,
   logoUrl: '',
   developerName: 'Crust & Co. POS Systems',
-  googleSheetWebAppUrl: '',
+  googleSheetWebAppUrl: 'https://script.google.com/macros/s/AKfycbzZ3lmCMBSHoKL2zm50vfiZJ3Qkj-nQUJEA1_0LWqWldfSkGw9OuotY-qZiFQNN5_E4/exec',
 };
 
 export const INITIAL_USERS: User[] = [
