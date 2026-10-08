@@ -85,6 +85,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
   });
 
+  useEffect(() => {
+    // Fetch saved URL from server-side config file
+    fetch('/api/get-google-sheet-url')
+      .then(res => res.json())
+      .then(data => {
+        if (data.googleSheetWebAppUrl) {
+          setSettings(prev => ({
+            ...prev,
+            googleSheetWebAppUrl: data.googleSheetWebAppUrl
+          }));
+        }
+      })
+      .catch(err => console.error('Failed to load server config:', err));
+  }, []);
+
   const [categories] = useState<Category[]>(INITIAL_CATEGORIES);
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY);

@@ -17,8 +17,10 @@ export const SettingsView: React.FC = () => {
 
   const isSuperAdmin = currentUser?.role === 'Super Admin';
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Update local context and localStorage
     updateSettings({
       ...settings,
       shopName,
@@ -28,7 +30,26 @@ export const SettingsView: React.FC = () => {
       logoUrl,
       ...(isSuperAdmin ? { developerName, googleSheetWebAppUrl } : {})
     });
-    showToast('Settings saved successfully!');
+
+    // Save URL to server-side config file if modified by Super Admin
+    if (isSuperAdmin && googleSheetWebAppUrl) {
+      try {
+        const response = await fetch('/api/save-google-sheet-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: googleSheetWebAppUrl })
+        });
+        const result = await response.json();
+        if (result.success) {
+          showToast('Google Sheet URL saved to code successfully!');
+        }
+      } catch (err) {
+        console.error('Failed to save URL to server:', err);
+        showToast('Saved locally, but failed to write to code file.', 'warning');
+      }
+    } else {
+      showToast('Settings saved successfully!');
+    }
   };
 
   const handleExportBackup = () => {
